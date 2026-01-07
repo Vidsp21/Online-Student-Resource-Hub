@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shopping Cart - Student Hub</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/dark-mode.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="container">
+            <div class="nav-brand">
+                <a href="index.html"><h2>🎓 Student Hub</h2></a>
+            </div>
+            <div class="nav-links">
+                <a href="shop.html" class="nav-link">Shop</a>
+                <a href="cart.html" class="nav-link active">
+                    🛒 Cart <span id="cart-count" class="badge">0</span>
+                </a>
+                <a href="dashboard.html" class="nav-link">Dashboard</a>
+                <button id="theme-toggle" class="theme-btn" title="Toggle Dark Mode">
+                    <span class="theme-icon">🌙</span>
+                </button>
+                <button id="logout-btn" class="btn btn-outline">Logout</button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Cart Section -->
+    <section class="cart-section">
+        <div class="container">
+            <h1>Shopping Cart</h1>
+
+            <div class="cart-container">
+                <div class="cart-items">
+                    <div id="empty-cart" class="empty-cart">
+                        <p>Your cart is empty</p>
+                        <a href="shop.html" class="btn btn-primary">Continue Shopping</a>
+                    </div>
+
+                    <div id="cart-items-list" style="display: none;">
+                        <!-- Cart items will be loaded here -->
+                    </div>
+                </div>
+
+                <div class="cart-summary" id="cart-summary" style="display: none;">
+                    <h3>Order Summary</h3>
+                    <div class="summary-row">
+                        <span>Subtotal:</span>
+                        <span id="subtotal">₹0</span>
+                    </div>
+                    <div class="summary-row">
+                        <span>Items:</span>
+                        <span id="total-items">0</span>
+                    </div>
+                    <hr>
+                    <div class="summary-row summary-total">
+                        <strong>Total:</strong>
+                        <strong id="total">₹0</strong>
+                    </div>
+                    <button id="checkout-btn" class="btn btn-primary btn-block">
+                        Proceed to Checkout
+                    </button>
+                    <a href="shop.html" class="btn btn-outline btn-block">Continue Shopping</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Checkout Modal -->
+    <div id="checkout-modal" class="modal">
+        <div class="modal-content">
+            <span class="modal-close">&times;</span>
+            <h2>Checkout</h2>
+            <form id="checkout-form">
+                <h3>Shipping Address</h3>
+                <div class="form-group">
+                    <label for="street">Street Address</label>
+                    <input type="text" id="street" required>
+                </div>
+                <div class="form-group">
+                    <label for="city">City</label>
+                    <input type="text" id="city" required>
+                </div>
+                <div class="form-group">
+                    <label for="state">State</label>
+                    <input type="text" id="state" required>
+                </div>
+                <div class="form-group">
+                    <label for="zipCode">ZIP Code</label>
+                    <input type="text" id="zipCode" required>
+                </div>
+                <div class="form-group">
+                    <label for="phone">Phone Number</label>
+                    <input type="tel" id="phone" required>
+                </div>
+
+                <h3>Payment Method</h3>
+                <div class="form-group">
+                    <select id="payment-method" required>
+                        <option value="cash">Cash on Delivery</option>
+                        <option value="upi">UPI</option>
+                        <option value="card">Card</option>
+                        <option value="blockchain">Blockchain (Future)</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="notes">Additional Notes (Optional)</label>
+                    <textarea id="notes" rows="3"></textarea>
+                </div>
+
+                <div class="checkout-total">
+                    <h3>Total Amount: <span id="checkout-total">₹0</span></h3>
+                </div>
+
+                <button type="submit" class="btn btn-primary btn-block">Place Order</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="js/theme.js"></script>
+    <script src="js/cart.js"></script>
+    <script>
+        // Check authentication
+        const token = localStorage.getItem('token');
+        if (!token) {
+            window.location.href = 'login.html';
+        }
+
+        const API_URL = 'http://localhost:3000/api';
+
+        // Logout
+        document.getElementById('logout-btn').addEventListener('click', () => {
+            localStorage.clear();
+            window.location.href = 'login.html';
+        });
+
+        // Load and display cart
+        function displayCart() {
+            const cart = getCart();
+            const emptyCart = document.getElementById('empty-cart');
+            const cartItemsList = document.getElementById('cart-items-list');
+            const cartSummary = document.getElementById('cart-summary');
+
+            if (cart.length === 0) {
+                emptyCart.style.display = 'block';
+                cartItemsList.style.display = 'none';
+                cartSummary.style.display = 'none';
+                return;
+            }
+
+            emptyCart.style.display = 'none';
+            cartItemsList.style.display = 'block';
+            cartSummary.style.display = 'block';
+
+            let subtotal = 0;
+            let totalItems = 0;
+
+            cartItemsList.innerHTML = cart.map(item => {
+                subtotal += item.price * item.quantity;
+                totalItems += item.quantity;
+
+                return `
+                    <div class="cart-item">
+                        <img src="${item.image}" alt="${item.title}" class="cart-item-image">
+                        <div class="cart-item-details">
+                            <h3>${item.title}</h3>
+                            <p class="cart-item-price">₹${item.price}</p>
+                        </div>
+                        <div class="cart-item-quantity">
+                            <button class="quantity-btn" onclick="updateQuantity('${item._id}', ${item.quantity - 1})">-</button>
+                            <span>${item.quantity}</span>
+                            <button class="quantity-btn" onclick="updateQuantity('${item._id}', ${item.quantity + 1})">+</button>
+                        </div>
+                        <div class="cart-item-total">
+                            <p>₹${item.price * item.quantity}</p>
+                        </div>
+                        <button class="cart-item-remove" onclick="removeFromCart('${item._id}')">×</button>
+                    </div>
+                `;
+            }).join('');
+
+            document.getElementById('subtotal').textContent = `₹${subtotal}`;
+            document.getElementById('total').textContent = `₹${subtotal}`;
+            document.getElementById('total-items').textContent = totalItems;
+            document.getElementById('checkout-total').textContent = `₹${subtotal}`;
+        }
+
+        // Update quantity
+        function updateQuantity(productId, newQuantity) {
+            if (newQuantity < 1) {
+                removeFromCart(productId);
+                return;
+            }
+
+            const cart = getCart();
+            const item = cart.find(i => i._id === productId);
+            if (item) {
+                item.quantity = newQuantity;
+                saveCart(cart);
+                displayCart();
+                updateCartCount();
+            }
+        }
+
+        // Checkout
+        document.getElementById('checkout-btn').addEventListener('click', () => {
+            const modal = document.getElementById('checkout-modal');
+            modal.style.display = 'flex';
+        });
+
+        document.querySelector('.modal-close').addEventListener('click', () => {
+            document.getElementById('checkout-modal').style.display = 'none';
+        });
+
+        document.getElementById('checkout-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const cart = getCart();
+            const items = cart.map(item => ({
+                productId: item._id,
+                quantity: item.quantity
+            }));
+
+            const orderData = {
+                items,
+                shippingAddress: {
+                    street: document.getElementById('street').value,
+                    city: document.getElementById('city').value,
+                    state: document.getElementById('state').value,
+                    zipCode: document.getElementById('zipCode').value,
+                    phone: document.getElementById('phone').value
+                },
+                paymentMethod: document.getElementById('payment-method').value,
+                notes: document.getElementById('notes').value
+            };
+
+            try {
+                const response = await fetch(`${API_URL}/orders`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify(orderData)
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    alert('Order placed successfully! 🎉');
+                    clearCart();
+                    window.location.href = 'dashboard.html';
+                } else {
+                    alert('Error: ' + data.message);
+                }
+            } catch (error) {
+                console.error('Checkout error:', error);
+                alert('Failed to place order. Please try again.');
+            }
+        });
+
+        // Initialize
+        displayCart();
+        updateCartCount();
+    </script>
+</body>
+</html>

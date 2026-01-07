@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat - Student Hub</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/dark-mode.css">
+    <script src="https://cdn.socket.io/4.6.1/socket.io.min.js"></script>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="container">
+            <div class="nav-brand">
+                <a href="index.html"><h2>🎓 Student Hub</h2></a>
+            </div>
+            <div class="nav-links">
+                <a href="shop.html" class="nav-link">Shop</a>
+                <a href="cart.html" class="nav-link">
+                    🛒 Cart <span id="cart-count" class="badge">0</span>
+                </a>
+                <a href="dashboard.html" class="nav-link">Dashboard</a>
+                <button id="theme-toggle" class="theme-btn" title="Toggle Dark Mode">
+                    <span class="theme-icon">🌙</span>
+                </button>
+                <button id="logout-btn" class="btn btn-outline">Logout</button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Chat Interface -->
+    <section class="chat-section">
+        <div class="container">
+            <div class="chat-container">
+                <!-- Conversations List -->
+                <div class="chat-sidebar">
+                    <h3>Messages</h3>
+                    <div id="conversations-list">
+                        <p style="text-align: center; color: var(--text-secondary);">Loading...</p>
+                    </div>
+                </div>
+
+                <!-- Chat Messages -->
+                <div class="chat-main">
+                    <div id="no-chat-selected" class="no-chat-selected">
+                        <p>Select a conversation to start chatting</p>
+                    </div>
+
+                    <div id="chat-window" style="display: none;">
+                        <!-- Chat Header -->
+                        <div class="chat-header">
+                            <div class="chat-user-info">
+                                <img id="chat-user-avatar" src="" alt="" class="chat-avatar">
+                                <div>
+                                    <h4 id="chat-user-name"></h4>
+                                    <span id="chat-user-status" class="chat-status">Online</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Messages Area -->
+                        <div id="messages-container" class="messages-container">
+                            <!-- Messages will be loaded here -->
+                        </div>
+
+                        <!-- Typing Indicator -->
+                        <div id="typing-indicator" class="typing-indicator" style="display: none;">
+                            <span></span><span></span><span></span>
+                        </div>
+
+                        <!-- Message Input -->
+                        <div class="message-input-area">
+                            <input 
+                                type="text" 
+                                id="message-input" 
+                                placeholder="Type a message..."
+                                autocomplete="off"
+                            >
+                            <button id="send-btn" class="btn btn-primary">Send</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script src="js/theme.js"></script>
+    <script src="js/cart.js"></script>
+    <script src="js/chat.js"></script>
+</body>
+</html>

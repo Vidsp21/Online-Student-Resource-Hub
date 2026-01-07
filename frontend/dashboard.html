@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Student Hub</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/dark-mode.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="container">
+            <div class="nav-brand">
+                <a href="index.html"><h2>🎓 Student Hub</h2></a>
+            </div>
+            <div class="nav-links">
+                <a href="shop.html" class="nav-link">Shop</a>
+                <a href="cart.html" class="nav-link">
+                    🛒 Cart <span id="cart-count" class="badge">0</span>
+                </a>
+                <a href="dashboard.html" class="nav-link active">Dashboard</a>
+                <a href="chat.html" class="nav-link">Messages</a>
+                <button id="theme-toggle" class="theme-btn" title="Toggle Dark Mode">
+                    <span class="theme-icon">🌙</span>
+                </button>
+                <button id="logout-btn" class="btn btn-outline">Logout</button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Dashboard -->
+    <section class="dashboard-section">
+        <div class="container">
+            <h1>My Dashboard</h1>
+
+            <!-- Dashboard Tabs -->
+            <div class="dashboard-tabs">
+                <button class="tab-btn active" data-tab="profile">Profile</button>
+                <button class="tab-btn" data-tab="orders">My Orders</button>
+                <button class="tab-btn" data-tab="products">My Products</button>
+                <button class="tab-btn" data-tab="add-product">Add Product</button>
+            </div>
+
+            <!-- Profile Tab -->
+            <div id="profile-tab" class="tab-content active">
+                <div class="profile-card">
+                    <div class="profile-header">
+                        <img id="user-avatar" src="https://via.placeholder.com/150" alt="Avatar" class="profile-avatar">
+                        <div>
+                            <h2 id="user-name"></h2>
+                            <p id="user-email"></p>
+                            <span id="user-role" class="badge"></span>
+                        </div>
+                    </div>
+                    <form id="profile-form" class="profile-form">
+                        <div class="form-group">
+                            <label for="profile-name">Name</label>
+                            <input type="text" id="profile-name">
+                        </div>
+                        <div class="form-group">
+                            <label for="profile-phone">Phone</label>
+                            <input type="tel" id="profile-phone">
+                        </div>
+                        <div class="form-group">
+                            <label for="profile-college">College</label>
+                            <input type="text" id="profile-college">
+                        </div>
+                        <button type="submit" class="btn btn-primary">Update Profile</button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Orders Tab -->
+            <div id="orders-tab" class="tab-content">
+                <h2>My Orders</h2>
+                <div id="orders-list">
+                    <p>Loading orders...</p>
+                </div>
+            </div>
+
+            <!-- My Products Tab -->
+            <div id="products-tab" class="tab-content">
+                <h2>My Listed Products</h2>
+                <div id="products-list">
+                    <p>Loading products...</p>
+                </div>
+            </div>
+
+            <!-- Add Product Tab -->
+            <div id="add-product-tab" class="tab-content">
+                <h2>List a New Product</h2>
+                <form id="add-product-form" class="add-product-form">
+                    <div class="form-group">
+                        <label for="product-title">Product Title</label>
+                        <input type="text" id="product-title" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="product-description">Description</label>
+                        <textarea id="product-description" rows="4" required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="product-price">Price (₹)</label>
+                        <input type="number" id="product-price" min="0" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="product-category">Category</label>
+                        <select id="product-category" required>
+                            <option value="Books">Books</option>
+                            <option value="Notes">Notes</option>
+                            <option value="Stationery">Stationery</option>
+                            <option value="Electronics">Electronics</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="product-condition">Condition</label>
+                        <select id="product-condition" required>
+                            <option value="New">New</option>
+                            <option value="Like New">Like New</option>
+                            <option value="Good">Good</option>
+                            <option value="Fair">Fair</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="product-stock">Stock Quantity</label>
+                        <input type="number" id="product-stock" min="1" value="1" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="product-image">Image URL</label>
+                        <input type="url" id="product-image" placeholder="https://example.com/image.jpg">
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-block">List Product</button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <script src="js/theme.js"></script>
+    <script src="js/cart.js"></script>
+    <script>
+        // Check authentication
+        const token = localStorage.getItem('token');
+        if (!token) {
+            window.location.href = 'login.html';
+        }
+
+        const API_URL = 'http://localhost:3000/api';
+        let currentUser = null;
+
+        // Logout
+        document.getElementById('logout-btn').addEventListener('click', () => {
+            localStorage.clear();
+            window.location.href = 'login.html';
+        });
+
+        // Tab switching
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const tabName = btn.dataset.tab;
+                
+                document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+                document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+                
+                btn.classList.add('active');
+                document.getElementById(`${tabName}-tab`).classList.add('active');
+            });
+        });
+
+        // Load user profile
+        async function loadProfile() {
+            try {
+                const response = await fetch(`${API_URL}/auth/me`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                const data = await response.json();
+                
+                if (data.success) {
+                    currentUser = data.user;
+                    document.getElementById('user-avatar').src = currentUser.avatar;
+                    document.getElementById('user-name').textContent = currentUser.name;
+                    document.getElementById('user-email').textContent = currentUser.email;
+                    document.getElementById('user-role').textContent = currentUser.role.toUpperCase();
+                    
+                    document.getElementById('profile-name').value = currentUser.name;
+                    document.getElementById('profile-phone').value = currentUser.phone || '';
+                    document.getElementById('profile-college').value = currentUser.college || '';
+                }
+            } catch (error) {
+                console.error('Error loading profile:', error);
+            }
+        }
+
+        // Update profile
+        document.getElementById('profile-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            try {
+                const response = await fetch(`${API_URL}/auth/profile`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify({
+                        name: document.getElementById('profile-name').value,
+                        phone: document.getElementById('profile-phone').value,
+                        college: document.getElementById('profile-college').value
+                    })
+                });
+                
+                const data = await response.json();
+                if (data.success) {
+                    alert('Profile updated successfully!');
+                    loadProfile();
+                }
+            } catch (error) {
+                console.error('Error updating profile:', error);
+                alert('Failed to update profile');
+            }
+        });
+
+        // Load orders
+        async function loadOrders() {
+            try {
+                const response = await fetch(`${API_URL}/orders/my-orders`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                const data = await response.json();
+                
+                const ordersList = document.getElementById('orders-list');
+                if (data.orders && data.orders.length > 0) {
+                    ordersList.innerHTML = data.orders.map(order => `
+                        <div class="order-card">
+                            <h4>Order #${order._id.slice(-6)}</h4>
+                            <p>Status: <span class="badge">${order.status}</span></p>
+                            <p>Total: ₹${order.totalAmount}</p>
+                            <p>Date: ${new Date(order.createdAt).toLocaleDateString()}</p>
+                            <p>Items: ${order.items.length}</p>
+                        </div>
+                    `).join('');
+                } else {
+                    ordersList.innerHTML = '<p>No orders yet</p>';
+                }
+            } catch (error) {
+                console.error('Error loading orders:', error);
+            }
+        }
+
+        // Load products
+        async function loadMyProducts() {
+            try {
+                const response = await fetch(`${API_URL}/products/user/my-products`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                const data = await response.json();
+                
+                const productsList = document.getElementById('products-list');
+                if (data.products && data.products.length > 0) {
+                    productsList.innerHTML = data.products.map(product => `
+                        <div class="product-card-small">
+                            <img src="${product.image}" alt="${product.title}">
+                            <div>
+                                <h4>${product.title}</h4>
+                                <p>₹${product.price} • ${product.category}</p>
+                                <p>Stock: ${product.stock} • Views: ${product.views}</p>
+                            </div>
+                        </div>
+                    `).join('');
+                } else {
+                    productsList.innerHTML = '<p>No products listed yet</p>';
+                }
+            } catch (error) {
+                console.error('Error loading products:', error);
+            }
+        }
+
+        // Add product
+        document.getElementById('add-product-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            try {
+                const response = await fetch(`${API_URL}/products`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify({
+                        title: document.getElementById('product-title').value,
+                        description: document.getElementById('product-description').value,
+                        price: document.getElementById('product-price').value,
+                        category: document.getElementById('product-category').value,
+                        condition: document.getElementById('product-condition').value,
+                        stock: document.getElementById('product-stock').value,
+                        image: document.getElementById('product-image').value || undefined
+                    })
+                });
+                
+                const data = await response.json();
+                if (data.success) {
+                    alert('Product listed successfully! 🎉');
+                    e.target.reset();
+                    loadMyProducts();
+                }
+            } catch (error) {
+                console.error('Error adding product:', error);
+                alert('Failed to add product');
+            }
+        });
+
+        // Initialize
+        loadProfile();
+        loadOrders();
+        loadMyProducts();
+        updateCartCount();
+    </script>
+</body>
+</html>

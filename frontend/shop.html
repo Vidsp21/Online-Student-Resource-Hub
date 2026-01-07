@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shop - Student Hub</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/dark-mode.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="container">
+            <div class="nav-brand">
+                <a href="index.html"><h2>🎓 Student Hub</h2></a>
+            </div>
+            <div class="nav-links">
+                <a href="shop.html" class="nav-link active">Shop</a>
+                <a href="cart.html" class="nav-link">
+                    🛒 Cart <span id="cart-count" class="badge">0</span>
+                </a>
+                <a href="dashboard.html" class="nav-link">Dashboard</a>
+                <button id="theme-toggle" class="theme-btn" title="Toggle Dark Mode">
+                    <span class="theme-icon">🌙</span>
+                </button>
+                <button id="logout-btn" class="btn btn-outline">Logout</button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Filters and Search -->
+    <section class="shop-header">
+        <div class="container">
+            <h1>Browse Products</h1>
+            
+            <div class="shop-controls">
+                <div class="search-box">
+                    <input 
+                        type="text" 
+                        id="search-input" 
+                        placeholder="Search products..."
+                    >
+                    <button id="search-btn" class="btn btn-primary">Search</button>
+                </div>
+
+                <div class="filters">
+                    <select id="category-filter">
+                        <option value="all">All Categories</option>
+                        <option value="Books">Books</option>
+                        <option value="Notes">Notes</option>
+                        <option value="Stationery">Stationery</option>
+                        <option value="Electronics">Electronics</option>
+                        <option value="Other">Other</option>
+                    </select>
+
+                    <select id="sort-filter">
+                        <option value="newest">Newest First</option>
+                        <option value="price-low">Price: Low to High</option>
+                        <option value="price-high">Price: High to Low</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Products Grid -->
+    <section class="products-section">
+        <div class="container">
+            <div id="loading" class="loading" style="display: none;">
+                <p>Loading products...</p>
+            </div>
+
+            <div id="products-grid" class="products-grid">
+                <!-- Products will be loaded here dynamically -->
+            </div>
+
+            <div id="no-products" class="no-products" style="display: none;">
+                <p>No products found.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Product Modal -->
+    <div id="product-modal" class="modal">
+        <div class="modal-content">
+            <span class="modal-close">&times;</span>
+            <div id="modal-body">
+                <!-- Product details will be loaded here -->
+            </div>
+        </div>
+    </div>
+
+    <script src="js/theme.js"></script>
+    <script src="js/cart.js"></script>
+    <script>
+        // Check authentication
+        const token = localStorage.getItem('token');
+        if (!token) {
+            window.location.href = 'login.html';
+        }
+
+        const API_URL = 'http://localhost:3000/api';
+        let allProducts = [];
+
+        // Logout functionality
+        document.getElementById('logout-btn').addEventListener('click', () => {
+            localStorage.clear();
+            window.location.href = 'login.html';
+        });
+
+        // Load products
+        async function loadProducts() {
+            try {
+                document.getElementById('loading').style.display = 'block';
+                
+                const response = await fetch(`${API_URL}/products`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+
+                const data = await response.json();
+                document.getElementById('loading').style.display = 'none';
+
+                if (data.success) {
+                    allProducts = data.products;
+                    displayProducts(allProducts);
+                }
+            } catch (error) {
+                console.error('Error loading products:', error);
+                document.getElementById('loading').style.display = 'none';
+                document.getElementById('no-products').style.display = 'block';
+            }
+        }
+
+        // Display products
+        function displayProducts(products) {
+            const grid = document.getElementById('products-grid');
+            const noProducts = document.getElementById('no-products');
+
+            if (products.length === 0) {
+                grid.innerHTML = '';
+                noProducts.style.display = 'block';
+                return;
+            }
+
+            noProducts.style.display = 'none';
+            grid.innerHTML = products.map(product => `
+                <div class="product-card" data-id="${product._id}">
+                    <img src="${product.image}" alt="${product.title}" class="product-image">
+                    <div class="product-info">
+                        <span class="product-category">${product.category}</span>
+                        <h3 class="product-title">${product.title}</h3>
+                        <p class="product-description">${product.description.substring(0, 80)}...</p>
+                        <div class="product-meta">
+                            <span class="product-price">₹${product.price}</span>
+                            <span class="product-condition">${product.condition}</span>
+                        </div>
+                        <div class="product-seller">
+                            <img src="${product.seller.avatar}" alt="${product.seller.name}" class="seller-avatar">
+                            <span>${product.seller.name}</span>
+                        </div>
+                        <div class="product-actions">
+                            <button class="btn btn-primary btn-sm add-to-cart" data-id="${product._id}">
+                                Add to Cart
+                            </button>
+                            <button class="btn btn-outline btn-sm view-product" data-id="${product._id}">
+                                View Details
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+
+            // Attach event listeners
+            attachProductEvents();
+        }
+
+        // Attach event listeners to product cards
+        function attachProductEvents() {
+            // Add to cart buttons
+            document.querySelectorAll('.add-to-cart').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const productId = e.target.dataset.id;
+                    const product = allProducts.find(p => p._id === productId);
+                    addToCart(product);
+                });
+            });
+
+            // View product buttons
+            document.querySelectorAll('.view-product').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const productId = e.target.dataset.id;
+                    viewProduct(productId);
+                });
+            });
+        }
+
+        // View product details
+        function viewProduct(productId) {
+            const product = allProducts.find(p => p._id === productId);
+            if (!product) return;
+
+            const modal = document.getElementById('product-modal');
+            const modalBody = document.getElementById('modal-body');
+
+            modalBody.innerHTML = `
+                <img src="${product.image}" alt="${product.title}" style="width: 100%; max-height: 400px; object-fit: cover; border-radius: 8px;">
+                <h2>${product.title}</h2>
+                <p class="product-category">${product.category} • ${product.condition}</p>
+                <h3 class="product-price">₹${product.price}</h3>
+                <p>${product.description}</p>
+                <div class="seller-info">
+                    <img src="${product.seller.avatar}" alt="${product.seller.name}" class="seller-avatar">
+                    <div>
+                        <p><strong>Seller:</strong> ${product.seller.name}</p>
+                        <p><strong>Email:</strong> ${product.seller.email}</p>
+                    </div>
+                </div>
+                <div style="margin-top: 20px;">
+                    <button class="btn btn-primary add-to-cart" data-id="${product._id}">Add to Cart</button>
+                    <a href="chat.html?user=${product.seller._id}" class="btn btn-outline">Chat with Seller</a>
+                </div>
+            `;
+
+            modal.style.display = 'flex';
+
+            // Attach add to cart event
+            modalBody.querySelector('.add-to-cart').addEventListener('click', () => {
+                addToCart(product);
+                modal.style.display = 'none';
+            });
+        }
+
+        // Close modal
+        document.querySelector('.modal-close').addEventListener('click', () => {
+            document.getElementById('product-modal').style.display = 'none';
+        });
+
+        // Filter and search
+        document.getElementById('category-filter').addEventListener('change', filterProducts);
+        document.getElementById('sort-filter').addEventListener('change', filterProducts);
+        document.getElementById('search-btn').addEventListener('click', filterProducts);
+        document.getElementById('search-input').addEventListener('keyup', (e) => {
+            if (e.key === 'Enter') filterProducts();
+        });
+
+        function filterProducts() {
+            let filtered = [...allProducts];
+            
+            const category = document.getElementById('category-filter').value;
+            const search = document.getElementById('search-input').value.toLowerCase();
+            const sort = document.getElementById('sort-filter').value;
+
+            // Filter by category
+            if (category !== 'all') {
+                filtered = filtered.filter(p => p.category === category);
+            }
+
+            // Filter by search
+            if (search) {
+                filtered = filtered.filter(p => 
+                    p.title.toLowerCase().includes(search) ||
+                    p.description.toLowerCase().includes(search)
+                );
+            }
+
+            // Sort
+            if (sort === 'price-low') {
+                filtered.sort((a, b) => a.price - b.price);
+            } else if (sort === 'price-high') {
+                filtered.sort((a, b) => b.price - a.price);
+            } else {
+                filtered.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+            }
+
+            displayProducts(filtered);
+        }
+
+        // Initialize
+        loadProducts();
+        updateCartCount();
+    </script>
+</body>
+</html>

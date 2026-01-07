@@ -1,0 +1,262 @@
+/* ========================================
+   DARK MODE THEME
+   ======================================== */
+
+/* Dark Mode is applied when body has class 'dark-mode' */
+body.dark-mode {
+    /* Background Colors */
+    --bg-primary: #1a202c;
+    --bg-secondary: #2d3748;
+    --bg-card: #2d3748;
+    
+    /* Text Colors */
+    --text-primary: #f7fafc;
+    --text-secondary: #e2e8f0;
+    --text-light: #cbd5e0;
+    
+    /* Border & Shadow */
+    --border-color: #4a5568;
+    --shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.3);
+    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
+    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.3);
+    --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.3);
+}
+
+/* Dark Mode - Form Inputs */
+body.dark-mode .form-group input,
+body.dark-mode .form-group select,
+body.dark-mode .form-group textarea,
+body.dark-mode .search-box input,
+body.dark-mode .filters select,
+body.dark-mode .message-input-area input {
+    background: var(--bg-secondary);
+    color: var(--text-primary);
+    border-color: var(--border-color);
+}
+
+body.dark-mode .form-group input:focus,
+body.dark-mode .form-group select:focus,
+body.dark-mode .form-group textarea:focus,
+body.dark-mode .search-box input:focus,
+body.dark-mode .message-input-area input:focus {
+    border-color: var(--primary-solid);
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.2);
+}
+
+/* Dark Mode - Cards & Containers */
+body.dark-mode .navbar,
+body.dark-mode .feature-card,
+body.dark-mode .category-card,
+body.dark-mode .auth-card,
+body.dark-mode .product-card,
+body.dark-mode .cart-items,
+body.dark-mode .cart-summary,
+body.dark-mode .chat-sidebar,
+body.dark-mode .chat-main,
+body.dark-mode .profile-card,
+body.dark-mode .modal-content {
+    background: var(--bg-card);
+}
+
+/* Dark Mode - Hero Section */
+body.dark-mode .hero {
+    background: linear-gradient(135deg, #4c51bf 0%, #553c9a 100%);
+}
+
+/* Dark Mode - Hover States */
+body.dark-mode .category-card:hover {
+    background: var(--primary);
+    color: white;
+}
+
+body.dark-mode .nav-link:hover,
+body.dark-mode .nav-link.active {
+    background: var(--bg-secondary);
+}
+
+/* Dark Mode - Theme Toggle Button */
+body.dark-mode .theme-btn {
+    background: var(--bg-secondary);
+}
+
+body.dark-mode .theme-btn:hover {
+    background: var(--primary-solid);
+}
+
+/* Dark Mode - Message Bubbles */
+body.dark-mode .message-content {
+    background: var(--bg-primary);
+}
+
+body.dark-mode .message-sent .message-content {
+    background: var(--primary);
+    color: white;
+}
+
+/* Dark Mode - Error & Success Messages */
+body.dark-mode .error-message {
+    background: rgba(245, 101, 101, 0.1);
+    border-color: var(--error);
+}
+
+body.dark-mode .success-message {
+    background: rgba(72, 187, 120, 0.1);
+    border-color: var(--success);
+}
+
+/* Dark Mode - Buttons */
+body.dark-mode .btn-outline {
+    border-color: var(--primary-solid);
+    color: var(--primary-solid);
+}
+
+body.dark-mode .btn-outline:hover {
+    background: var(--primary);
+    color: white;
+    border-color: transparent;
+}
+
+body.dark-mode .quantity-btn {
+    background: var(--bg-primary);
+    border-color: var(--border-color);
+    color: var(--text-primary);
+}
+
+body.dark-mode .quantity-btn:hover {
+    background: var(--primary-solid);
+    color: white;
+}
+
+/* Dark Mode - Footer */
+body.dark-mode .footer {
+    background: #171923;
+}
+
+/* Dark Mode - Tab Buttons */
+body.dark-mode .tab-btn {
+    color: var(--text-secondary);
+}
+
+body.dark-mode .tab-btn.active {
+    color: var(--primary-solid);
+}
+
+/* Dark Mode - Product Category Badge */
+body.dark-mode .product-category {
+    background: var(--bg-primary);
+    color: var(--primary-solid);
+}
+
+/* Dark Mode - Modal */
+body.dark-mode .modal {
+    background: rgba(0, 0, 0, 0.8);
+}
+
+/* Dark Mode - Table Alternating Rows (if any) */
+body.dark-mode tr:nth-child(even) {
+    background: var(--bg-secondary);
+}
+
+/* Dark Mode - Scrollbar Styling */
+body.dark-mode::-webkit-scrollbar {
+    width: 10px;
+}
+
+body.dark-mode::-webkit-scrollbar-track {
+    background: var(--bg-primary);
+}
+
+body.dark-mode::-webkit-scrollbar-thumb {
+    background: var(--border-color);
+    border-radius: var(--radius-full);
+}
+
+body.dark-mode::-webkit-scrollbar-thumb:hover {
+    background: var(--primary-solid);
+}
+
+/* Dark Mode - Selection */
+body.dark-mode::selection {
+    background: var(--primary-solid);
+    color: white;
+}
+
+/* Dark Mode Transition */
+body,
+.navbar,
+.feature-card,
+.category-card,
+.auth-card,
+.product-card,
+.cart-items,
+.cart-summary,
+.chat-sidebar,
+.chat-main,
+.profile-card,
+.modal-content,
+.form-group input,
+.form-group select,
+.form-group textarea,
+.btn-outline,
+.quantity-btn,
+.message-content {
+    transition: background 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
+
+/* Dark Mode - Product Cards Hover */
+body.dark-mode .product-card:hover {
+    background: #374151;
+}
+
+/* Dark Mode - Cart Item Border */
+body.dark-mode .cart-item {
+    border-bottom-color: var(--border-color);
+}
+
+/* Dark Mode - Chat Header Border */
+body.dark-mode .chat-header,
+body.dark-mode .message-input-area {
+    border-color: var(--border-color);
+}
+
+/* Dark Mode - Profile Header Border */
+body.dark-mode .profile-header {
+    border-bottom-color: var(--border-color);
+}
+
+/* Dark Mode - Dashboard Tabs Border */
+body.dark-mode .dashboard-tabs {
+    border-bottom-color: var(--border-color);
+}
+
+/* Dark Mode - Typing Indicator */
+body.dark-mode .typing-indicator span {
+    background: var(--text-secondary);
+}
+
+/* Dark Mode - Empty States */
+body.dark-mode .empty-cart,
+body.dark-mode .no-chat-selected,
+body.dark-mode .no-products,
+body.dark-mode .loading {
+    color: var(--text-secondary);
+}
+
+/* Dark Mode - Links in Footer */
+body.dark-mode .footer-section a:hover {
+    color: var(--primary-solid);
+}
+
+/* Smooth Theme Toggle Animation */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+body.dark-mode * {
+    animation: fadeIn 0.3s ease;
+}
