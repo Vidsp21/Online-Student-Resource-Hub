@@ -403,58 +403,6 @@ Content-Type: application/json
 }
 ```
 
----
-
-## 📸 Screenshots
-
-### Landing Page
-Modern hero section with call-to-action buttons and feature highlights.
-
-### Shop Page
-Grid layout of products with search, filter, and sort functionality.
-
-### Chat Interface
-Real-time messaging with typing indicators and online status.
-
-### Dashboard
-User profile management, order history, and product listings.
-
-### Dark Mode
-Beautiful dark theme for comfortable nighttime browsing.
-
----
-
-## � Screenshots
-
-### Landing Page
-![Landing Page](https://via.placeholder.com/800x400/667eea/ffffff?text=Landing+Page+-+Add+Your+Screenshot)
-*Modern hero section with call-to-action buttons and feature highlights*
-
-### Shop Page
-![Shop Page](https://via.placeholder.com/800x400/764ba2/ffffff?text=Shop+Page+-+Add+Your+Screenshot)
-*Grid layout of products with search, filter, and sort functionality*
-
-### Chat Interface
-![Chat Interface](https://via.placeholder.com/800x400/667eea/ffffff?text=Chat+Interface+-+Add+Your+Screenshot)
-*Real-time messaging with typing indicators and online status*
-
-### Dashboard
-![Dashboard](https://via.placeholder.com/800x400/764ba2/ffffff?text=Dashboard+-+Add+Your+Screenshot)
-*User profile management, order history, and product listings*
-
-### Dark Mode
-![Dark Mode](https://via.placeholder.com/800x400/1a202c/ffffff?text=Dark+Mode+-+Add+Your+Screenshot)
-*Beautiful dark theme for comfortable nighttime browsing*
-
-> **📸 To add your own screenshots:**
-> 1. Take screenshots of your app
-> 2. Upload them to your repository in a `screenshots/` folder
-> 3. Replace the placeholder URLs above with: `screenshots/landing-page.png`, etc.
-> 
-> Or use a free image host like [imgur.com](https://imgur.com) and paste the direct image URLs
-
----
-
 ## �🔮 Future Enhancements
 
 ### Phase 1 - Immediate Improvements
@@ -561,9 +509,8 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ## 👨‍💻 Author
 
 **Your Name**
-- GitHub: [@yourusername](https://github.com/yourusername)
-- LinkedIn: [Your Name](https://linkedin.com/in/yourname)
-- Email: your.email@example.com
+- GitHub: [@vidsp21](https://github.com/vidsp21)
+- LinkedIn: [Vidula Patil](https://linkedin.com/in/vidulapatil)
 
 ---
 
@@ -573,15 +520,6 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - Inspired by modern e-commerce platforms
 - Special thanks to the open-source community
 - Icons and images from placeholder services
-
----
-
-## 📞 Support
-
-For support and questions:
-- Create an issue on GitHub
-- Email: support@studenthub.com
-- Documentation: [Wiki](https://github.com/yourusername/online-student-resource-hub/wiki)
 
 ---
 
