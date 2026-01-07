@@ -40,7 +40,6 @@ https://user-images.githubusercontent.com/YOUR_VIDEO_FILE.mp4
 - [Configuration](#configuration)
 - [Running the Application](#running-the-application)
 - [API Documentation](#api-documentation)
-- [Screenshots](#screenshots)
 - [Future Enhancements](#future-enhancements)
 - [Contributing](#contributing)
 - [License](#license)
