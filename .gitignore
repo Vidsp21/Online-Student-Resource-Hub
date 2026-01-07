@@ -28,3 +28,10 @@ data/
 # Build
 dist/
 build/
+
+# Large files (videos, images)
+*.mp4
+*.avi
+*.mov
+*.mkv
+demo/
