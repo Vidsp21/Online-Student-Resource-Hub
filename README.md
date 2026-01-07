@@ -12,7 +12,7 @@
 
 ### Video Demonstration
 
-[![Watch Demo Video](https://img.shields.io/badge/▶️_Watch_Demo-FF0000?style=for-the-badge&logo=youtube&logoColor=white)]([YOUR_VIDEO_LINK_HERE](https://github.com/Vidsp21/Online-Student-Resource-Hub/releases/tag/v1.0.0))
+[![Watch Demo Video](https://img.shields.io/badge/▶️_Watch_Demo-FF0000?style=for-the-badge&logo=youtube&logoColor=white)]((https://github.com/Vidsp21/Online-Student-Resource-Hub/releases/tag/v1.0.0))
 
 <!-- Alternative: If you uploaded video to demo folder, use this instead:
 https://user-images.githubusercontent.com/YOUR_VIDEO_FILE.mp4
