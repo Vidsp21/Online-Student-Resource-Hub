@@ -510,7 +510,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 **Your Name**
 - GitHub: [@vidsp21](https://github.com/vidsp21)
-- LinkedIn: [Vidula Patil](https://linkedin.com/in/vidulapatil)
+- LinkedIn: [Vidula Patil](https://linkedin.com/in/vidula-patil-61a902282)
 
 ---
 
